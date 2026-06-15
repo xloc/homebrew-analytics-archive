@@ -1,0 +1,47 @@
+name: Snapshot Homebrew analytics
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "24 2 1 * *"
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download snapshots
+        run: |
+          set -euo pipefail
+
+          timestamp="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          mkdir -p snapshots/os-version
+
+          for window in 30d 90d 365d; do
+            url="https://formulae.brew.sh/api/analytics/os-version/${window}.json"
+            output="snapshots/os-version/${timestamp}-${window}.json"
+
+            curl --fail --location --silent --show-error "$url" --output "$output"
+            jq empty "$output"
+          done
+
+      - name: Commit snapshots
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add snapshots/os-version/*.json
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Add Homebrew analytics snapshots"
+          git push
