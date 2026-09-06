@@ -1,6 +1,6 @@
 # Homebrew Analytics Archive
 
-Monthly snapshots of Homebrew analytics JSON.
+Weekly, month-aligned snapshots of Homebrew analytics JSON.
 
 Tracked endpoints:
 
@@ -8,7 +8,7 @@ Tracked endpoints:
 - `https://formulae.brew.sh/api/analytics/os-version/90d.json`
 - `https://formulae.brew.sh/api/analytics/os-version/365d.json`
 
-New snapshots are saved under `snapshots/os-version/` by a scheduled GitHub Actions workflow.
+New snapshots are saved under `snapshots/os-version/` by a scheduled GitHub Actions workflow on the 1st, 8th, 15th, and 22nd of each month.
 
 File format:
 

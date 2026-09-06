@@ -3,7 +3,7 @@ name: Snapshot Homebrew analytics
 on:
   workflow_dispatch:
   schedule:
-    - cron: "24 2 1 * *"
+    - cron: "24 2 1,8,15,22 * *"
 
 permissions:
   contents: write
